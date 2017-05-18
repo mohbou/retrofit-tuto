@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+
         mService.stocks().enqueue(new Callback<Stocks>() {
             @Override
             public void onResponse(Call<Stocks> call, Response<Stocks> response) {
@@ -62,10 +63,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //debug the response
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         File cacheFile = new File(this.getCacheDir(), "okhttp_cache");
         cacheFile.mkdir();
 
-        Cache cache = new Cache(cacheFile, 10 * 1000 * 1000);
+        Cache cache = new Cache(cacheFile, 10 * 1000 * 1000);//10mb file
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
